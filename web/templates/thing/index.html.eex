@@ -4,7 +4,6 @@
   <thead>
     <tr>
       <th>Firmware name</th>
-      <th>Code</th>
 
       <th></th>
     </tr>
@@ -13,7 +12,6 @@
 <%= for thing <- @things do %>
     <tr>
       <td><%= thing.firmware_name %></td>
-      <td><%= thing.code %></td>
 
       <td class="text-right">
         <%= link "Show", to: thing_path(@conn, :show, thing), class: "btn btn-default btn-xs" %>
