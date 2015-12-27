@@ -38,8 +38,8 @@ defmodule Cortex.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.9"},
       {:cowboy, "~> 1.0"},
-      {:firmata, "~> 0.0.1"},
-      {:serial, git: "https://github.com/kfatehi/elixir_serial.git", branch: "nerves-support"},
+      {:firmata, path: "/Users/keyvan/Workspace/firmata"},
+      {:serial, path: "/Users/keyvan/Workspace/elixir_serial"}
    ]
   end
 

@@ -1,0 +1,18 @@
+<h2>Show thing</h2>
+
+<ul>
+
+  <li>
+    <strong>Firmware name:</strong>
+    <%= @thing.firmware_name %>
+  </li>
+
+  <li>
+    <strong>Code:</strong>
+    <pre><%= Cortex.Worker.Mapper.app_module_code(@thing.code, @thing.firmware_name) %></pre>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: thing_path(@conn, :edit, @thing) %>
+<%= link "Back", to: thing_path(@conn, :index) %>

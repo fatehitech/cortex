@@ -1,0 +1,28 @@
+<h2>Listing things</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Firmware name</th>
+      <th>Code</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for thing <- @things do %>
+    <tr>
+      <td><%= thing.firmware_name %></td>
+      <td><%= thing.code %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: thing_path(@conn, :show, thing), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: thing_path(@conn, :edit, thing), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: thing_path(@conn, :delete, thing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New thing", to: thing_path(@conn, :new) %>
