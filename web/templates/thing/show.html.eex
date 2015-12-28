@@ -9,7 +9,7 @@
 
   <li>
     <strong>Code:</strong>
-    <pre><%= @thing.code %></pre>
+    <pre readonly="true" class="editor"><%= @thing.code %></pre>
   </li>
 
 </ul>

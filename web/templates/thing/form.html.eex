@@ -13,7 +13,24 @@
 
   <div class="form-group">
     <%= label f, :code, class: "control-label" %>
-    <%= textarea f, :code, class: "form-control" %>
+    <div>
+      <p>
+      The code below is part of a larger <a href="http://elixir-lang.org/docs/stable/elixir/GenServer.html">GenServer</a> implementation.
+
+      You can define your own functions, <code>send</code> messages and use <code>handle_info</code> to react to things.
+
+      You can <code>spawn</code> and <code>spawn_link</code> as well.
+
+      </p>
+      <p>
+      For available functions, see documentation for <a href="https://github.com/kfatehi/firmata/blob/master/lib/firmata/board.ex">Firmata.Board</a>
+      available below as <code>Board</code>
+      </p>
+      <p>
+      All code runs supervised, so crashing is fine, it will automatically restart.
+      </p>
+    </div>
+    <%= textarea f, :code, class: "form-control editor" %>
     <%= error_tag f, :code %>
   </div>
 
