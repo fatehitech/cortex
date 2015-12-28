@@ -35,10 +35,7 @@ defmodule Cortex.Thing.Manager do
   end
 
   def loop(manager) do
-    tty = GenServer.call(manager, :tick)
-    count = Enum.count(tty, fn({_,_,state})->
-      state == @connected
-    end)
+    count = GenServer.call(manager, :tick)
     if count == 0 do
       :timer.sleep 5_000
     else
@@ -51,15 +48,24 @@ defmodule Cortex.Thing.Manager do
   @doc """
   Causes identification on each unknown and unconnected tty
   """
-  def handle_call(:tick, _from, {tty, pids} = state) do
-    tty = Cortex.TtyList.get
-    |> update_tty_list(tty)
+  def handle_call(:tick, _from, {tty_list, pids} = state) do
+    new_tty_list = Cortex.TtyList.get
+    |> update_tty_list(tty_list)
     |> identify
-    {:reply, tty, {tty, pids}}
+
+    lost_knowns(tty_list, new_tty_list)
+    |> Enum.each(fn({path, name, _})->
+      IO.puts "lost #{path}"
+      send(self(), {:lost, path, name})
+    end)
+
+    connected_count = Enum.count(new_tty_list, fn({_,_,state})-> state == @connected end)
+
+    {:reply, connected_count, {new_tty_list, pids}}
   end
 
   @doc """
-  Closes any connected tty
+  Closes any connected tty running the Firmata identifier
   """
   def handle_info(:tock, {ttys, ident_pids}) do
     ttys = remove_connected(ttys)
@@ -81,9 +87,22 @@ defmodule Cortex.Thing.Manager do
     {:noreply, {tty_list, ident_pids}}
   end
 
+  @doc """
+  Received when we have identified a tty to be running Firmata
+  At this point it's ready to pass to some process to open and use it
+  """
   def handle_info({:identified, tty_path, name}, {tty_list, ident_pids}) do
     IO.puts ">>>>> identified #{tty_path} #{name}"
     {:noreply, {identified(tty_list, tty_path, name), ident_pids}}
+  end
+
+  @doc """
+  Received when we have lost a known Firmata device
+  Stopping any process you started when it was identified
+  """
+  def handle_info({:lost, tty_path, name}, state) do
+    IO.puts ">>>>> lost #{tty_path} #{name}"
+    {:noreply, state}
   end
 
   @doc """
@@ -93,7 +112,6 @@ defmodule Cortex.Thing.Manager do
   def remove_connected(ttys) do
     Enum.reduce(ttys, [], fn({path, name, status} = tty, result) ->
       if status == @connected do
-        IO.puts "removed a connected tty #{}"
         result
       else
         [tty|result]
@@ -170,5 +188,24 @@ defmodule Cortex.Thing.Manager do
       end
     end)
     |> Enum.reverse
+  end
+
+  @doc """
+  Reveals which ttys that were otherwise known, are now lost
+  """
+  def lost_knowns(prev_ttys, new_ttys) do
+    Enum.reject(prev_ttys, fn({prev_path, prev_name, status} = prev_tty)->
+      status != @known
+    end)
+    |> Enum.reduce([], fn({prev_path, _, _} = prev_tty, result) ->
+      located = Enum.find(new_ttys, false, fn({other_path, _, _}) ->
+        prev_path == other_path
+      end)
+      if located == false do
+        [prev_tty|result]
+      else
+        result
+      end
+    end)
   end
 end

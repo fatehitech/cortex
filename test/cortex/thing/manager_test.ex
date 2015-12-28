@@ -32,17 +32,37 @@ defmodule Cortex.Thing.ManagerTest do
     ]
   end
 
+  test "lost_knowns/2 reveals which known ttys we lost" do
+    prev_tty = [{"/dev/ttyACM1", "Uno", 2},{"/dev/ttyACM2", "Metro", 1}]
+    new_tty = [ {"/dev/ttyACM0", nil, 0} ]
+    out = Cortex.Thing.Manager.lost_knowns(prev_tty, new_tty)
+    assert out == [
+      {"/dev/ttyACM1", "Uno", 2}
+    ]
+  end
+
+  test "lost_knowns/2 reveals which known ttys we lost" do
+    prev_ttys = [{"/dev/cu.usbserial-ADAOLOS6z", "Metro.ino", 2}]
+    new_ttys = [{"/dev/cu.usbserial-ADAOLOS6z", "Metro.ino", 2},{"/dev/cu.usbmodem1411", "Uno.ino", 2}]
+    out = Cortex.Thing.Manager.lost_knowns(prev_ttys, new_ttys)
+    assert out == [
+      {"/dev/cu.usbmodem1411", "Uno.ino", 2}
+    ]
+  end
+
   # identify
 
   test "identify/1 changes status of tty from 0 to 1 and sends connect message" do
-    list = [{"/dev/ttyACM0", nil, 0},{"/dev/ttyACM1", nil, 1}]
+    list = [{"/dev/ttyACM0", nil, 0},{"/dev/ttyACM1", nil, 1}, {"/dev/ttyACM2", "Uno", 2}]
     out = Cortex.Thing.Manager.identify(list)
     assert out == [
       {"/dev/ttyACM0", nil, 1},
-      {"/dev/ttyACM1", nil, 1}
+      {"/dev/ttyACM1", nil, 1},
+      {"/dev/ttyACM2", "Uno", 2}
     ]
     assert_receive({ :connect, "/dev/ttyACM0" })
     refute_receive({ :connect, "/dev/ttyACM1" })
+    refute_receive({ :connect, "/dev/ttyACM2" })
   end
 
   # identified
