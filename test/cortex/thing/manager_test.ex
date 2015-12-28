@@ -39,9 +39,9 @@ defmodule Cortex.Thing.ManagerTest do
     ]
   end
 
-  test "lost_knowns/2 reveals which known ttys we lost" do
-    prev_ttys = [{"/dev/cu.usbserial-ADAOLOS6z", "Metro.ino", 2}]
-    new_ttys = [{"/dev/cu.usbserial-ADAOLOS6z", "Metro.ino", 2},{"/dev/cu.usbmodem1411", "Uno.ino", 2}]
+  test "lost_knowns/2 reveals which known ttys we lost (2)" do
+    prev_ttys = [{"/dev/cu.usbserial-ADAOLOS6z", "Metro.ino", 2},{"/dev/cu.usbmodem1411", "Uno.ino", 2}]
+    new_ttys = [{"/dev/cu.usbserial-ADAOLOS6z", "Metro.ino", 2}]
     out = Cortex.Thing.Manager.lost_knowns(prev_ttys, new_ttys)
     assert out == [
       {"/dev/cu.usbmodem1411", "Uno.ino", 2}
