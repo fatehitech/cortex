@@ -10,8 +10,7 @@ defmodule Cortex.Thing.Manager do
 		lookup matching firmware_name in database
 			start it up, supervised
 
-  tty list Structure:
-  [{tty_name, firmware_name, int:status}, ...]
+  Also reports devices that we consider **known** which have been lost
   """
 
   @disconnected 0
@@ -73,13 +72,20 @@ defmodule Cortex.Thing.Manager do
     {:noreply, {ttys, []}}
   end
 
-  def handle_info({:connect, tty_path}, {tty_list, ident_pids}) do
-    IO.puts "connect #{tty_path}"
+  @doc """
+  Probe a tty for Firmata by connecting to it. Good boards (Uno, Metro)
+  wire RS232 DTR to a board reset, and Firmata tells us its firmware
+  name on startup. That's why this works.
+  """
+  def handle_info({:probe, tty_path}, {tty_list, ident_pids}) do
     {:ok, pid} = Ident.start_link(tty_path, 57600, self())
     {:noreply, {tty_list, [{tty_path, pid}|ident_pids]}}
   end
 
-  def handle_info({:disconnect, tty_path}, {tty_list, ident_pids}) do
+  @doc """
+  Stop probing the tty by disconnecting the serial port
+  """
+  def handle_info({:unprobe, tty_path}, {tty_list, ident_pids}) do
     ident_pids = disconnect(ident_pids, tty_path, fn(pid) ->
       IO.puts "stopped #{tty_path}"
       Ident.stop(pid)
@@ -145,7 +151,7 @@ defmodule Cortex.Thing.Manager do
   def identified(ttys, tty_path, firmware_name) do
     Enum.reduce(ttys, [], fn({path, name, status} = tty, result) ->
       if status == @connected and path == tty_path do
-        send(self, {:disconnect, path})
+        send(self, {:unprobe, path})
         [{path, firmware_name, @known}|result]
       else
         [tty|result]
@@ -164,7 +170,7 @@ defmodule Cortex.Thing.Manager do
   def identify(ttys) do
     Enum.reduce(ttys, [], fn({path, name, status} = tty, result) ->
       if status == @disconnected do
-        send(self, {:connect, path})
+        send(self, {:probe, path})
         [{path, name, @connected}|result]
       else
         [tty|result]

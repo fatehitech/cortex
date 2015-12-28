@@ -1,8 +1,6 @@
 defmodule Cortex.Thing.ManagerTest do
   use ExUnit.Case
 
-  # test update_tty_list
-
   test "update_tty_list/2 makes correct tty list when seen nothing yet" do
     sys_tty = ["/dev/ttyACM0", "/dev/ttyACM1"]
     seen_tty = []
@@ -50,8 +48,6 @@ defmodule Cortex.Thing.ManagerTest do
     ]
   end
 
-  # identify
-
   test "identify/1 changes status of tty from 0 to 1 and sends connect message" do
     list = [{"/dev/ttyACM0", nil, 0},{"/dev/ttyACM1", nil, 1}, {"/dev/ttyACM2", "Uno", 2}]
     out = Cortex.Thing.Manager.identify(list)
@@ -60,25 +56,21 @@ defmodule Cortex.Thing.ManagerTest do
       {"/dev/ttyACM1", nil, 1},
       {"/dev/ttyACM2", "Uno", 2}
     ]
-    assert_receive({ :connect, "/dev/ttyACM0" })
-    refute_receive({ :connect, "/dev/ttyACM1" })
-    refute_receive({ :connect, "/dev/ttyACM2" })
+    assert_receive({ :probe, "/dev/ttyACM0" })
+    refute_receive({ :probe, "/dev/ttyACM1" })
+    refute_receive({ :probe, "/dev/ttyACM2" })
   end
 
-  # identified
-
-  test "identified/3 updates ttys with the one with given path identified and sends disconnect message" do
+  test "identified/3 updates ttys with the one with given path identified and sends unprobe message" do
     list = [{"/dev/ttyACM0", nil, 1},{"/dev/ttyACM1", nil, 1}]
     out = Cortex.Thing.Manager.identified(list, "/dev/ttyACM1", "Uno.ino")
     assert out == [
       {"/dev/ttyACM0", nil, 1},
       {"/dev/ttyACM1", "Uno.ino", 2}
     ]
-    assert_receive({ :disconnect, "/dev/ttyACM1" })
-    refute_receive({ :disconnect, "/dev/ttyACM0" })
+    assert_receive({ :unprobe, "/dev/ttyACM1" })
+    refute_receive({ :unprobe, "/dev/ttyACM0" })
   end
-
-  # disconnect
 
   test "disconnect/3 removes the element with with the matching tty name and calls the callback with it" do
     list = [{"/dev/ttyACM0", "hello"},{"/dev/ttyACM1", "world"}]
