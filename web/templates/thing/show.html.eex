@@ -9,7 +9,7 @@
 
   <li>
     <strong>Code:</strong>
-    <pre><%= Cortex.Worker.Mapper.app_module_code(@thing.code, @thing.firmware_name) %></pre>
+    <pre><%= @thing.code %></pre>
   </li>
 
 </ul>

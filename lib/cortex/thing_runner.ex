@@ -9,32 +9,27 @@ defmodule Cortex.ThingRunner do
       @high 1
       @low 0
 
-
-      def start_link(tty, baudrate, opts \\ []) do
-        GenServer.start_link(__MODULE__, [tty, baudrate], opts)
+      def stop(pid) do
+        GenServer.call(pid, :stop)
       end
 
-      def init([tty, baudrate]) do
-        IO.puts "starting"
-        {:ok, serial} = Serial.start_link
-        {:ok, board} = Board.start_link
-        Serial.open(serial, tty)
-        Serial.set_speed(serial, baudrate)
-        Serial.connect(serial)
-        {:ok, {board, serial}}
+      def handle_call(:stop, _from, state) do
+        state |> elem(0) |> GenServer.call(:stop)
+        state |> elem(1) |> Serial.stop()
+        {:stop, :normal, :ok, state}
       end
 
       # Forward data over serial port to Firmata
 
-      def handle_info({:elixir_serial, _serial, data}, {board, _} = state) do
-        send(board, {:serial, data})
+      def handle_info({:elixir_serial, _serial, data}, state) do
+        state |> elem(0) |> send({:serial, data})
         {:noreply, state}
       end
 
       # Send data over serial port when Firmata asks us to
 
-      def handle_info({:firmata, {:send_data, data}}, {_, serial} = state) do
-        Serial.send_data(serial, data)
+      def handle_info({:firmata, {:send_data, data}}, state) do
+        state |> elem(1) |> Serial.send_data(data)
         {:noreply, state}
       end
     end

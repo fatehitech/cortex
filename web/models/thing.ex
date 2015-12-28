@@ -3,7 +3,7 @@ defmodule Cortex.Thing do
 
   schema "things" do
     field :firmware_name, :string
-    field :code, :string
+    field :code, :string, default: Cortex.ThingCode.default
 
     timestamps
   end
