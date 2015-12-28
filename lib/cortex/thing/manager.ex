@@ -50,9 +50,6 @@ defmodule Cortex.Thing.Manager do
   Causes identification on each unknown and unconnected tty
   """
   def handle_call(:tick, _from, {tty_list, pids,sup} = state) do
-
-    #IO.inspect Supervisor.which_children(sup)
-
     new_tty_list = Cortex.TtyList.get
     |> update_tty_list(tty_list)
     |> identify
@@ -114,7 +111,6 @@ defmodule Cortex.Thing.Manager do
   Stopping any process you started when it was identified
   """
   def handle_info({:lost, tty_path, name}, {_,_,sup}=state) do
-    IO.puts ">>>>> lost #{tty_path} #{name}"
     module_name = Cortex.Thing.module_name(name)
     if module_name do
       Cortex.Thing.Supervisor.stop_device(sup, module_name)
