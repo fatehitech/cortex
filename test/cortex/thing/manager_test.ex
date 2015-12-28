@@ -68,8 +68,8 @@ defmodule Cortex.Thing.ManagerTest do
       {"/dev/ttyACM0", nil, 1},
       {"/dev/ttyACM1", "Uno.ino", 2}
     ]
-    assert_receive({ :unprobe, "/dev/ttyACM1" })
-    refute_receive({ :unprobe, "/dev/ttyACM0" })
+    assert_receive({ :unprobe, "/dev/ttyACM1", "Uno.ino" })
+    refute_receive({ :unprobe, "/dev/ttyACM0", nil })
   end
 
   test "disconnect/3 removes the element with with the matching tty name and calls the callback with it" do

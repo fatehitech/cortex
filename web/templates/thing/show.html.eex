@@ -9,7 +9,7 @@
 
   <li>
     <strong>Code:</strong>
-    <pre><%= @thing.code %></pre>
+    <pre><%= Cortex.ThingCode.body_string_to_module_string(@thing.code, @thing.firmware_name) %></pre>
   </li>
 
 </ul>

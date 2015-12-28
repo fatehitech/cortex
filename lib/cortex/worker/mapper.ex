@@ -19,17 +19,6 @@ defmodule Cortex.Worker.Mapper do
   def handle_info({:found, tty, name, pid}, devices) do
     IO.puts "found >#{name}<"
     Cortex.Worker.ScanApp.stop(pid)
-    #devices = devices |> find_and_update_by_tty(tty, fn(dev)->
-    #  code = Cortex.Repo.one(from thing in Cortex.Thing, select: thing.code, where: thing.firmware_name == ^name)
-    #  if code do
-    #    module = Cortex.ThingCode.to_module(code, name)
-    #    {:ok, pid} = module.start_link(tty, @baudrate)
-    #    dev = Keyword.put(dev, :pid, pid)
-    #  else
-    #    dev
-    #  end
-    #  Keyword.put(dev, :name, name)
-    #end)
     {:noreply, devices}
   end
 

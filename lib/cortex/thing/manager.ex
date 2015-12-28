@@ -10,7 +10,8 @@ defmodule Cortex.Thing.Manager do
 		lookup matching firmware_name in database
 			start it up, supervised
 
-  Also reports devices that we consider **known** which have been lost
+  Also detects devices that we consider **known** which have been lost
+    and stops them from the supervisor
   """
 
   @disconnected 0
@@ -28,7 +29,8 @@ defmodule Cortex.Thing.Manager do
   def init(:ok) do
     ttys = []
     scan_pids = []
-    state = {ttys, scan_pids}
+    {:ok, sup} = Cortex.Thing.Supervisor.start_link
+    state = {ttys, scan_pids, sup}
     manager = self
     {:ok, state}
   end
@@ -47,29 +49,31 @@ defmodule Cortex.Thing.Manager do
   @doc """
   Causes identification on each unknown and unconnected tty
   """
-  def handle_call(:tick, _from, {tty_list, pids} = state) do
+  def handle_call(:tick, _from, {tty_list, pids,sup} = state) do
+
+    #IO.inspect Supervisor.which_children(sup)
+
     new_tty_list = Cortex.TtyList.get
     |> update_tty_list(tty_list)
     |> identify
 
     lost_knowns(tty_list, new_tty_list)
     |> Enum.each(fn({path, name, _})->
-      IO.puts "lost #{path}"
       send(self(), {:lost, path, name})
     end)
 
     connected_count = Enum.count(new_tty_list, fn({_,_,state})-> state == @connected end)
 
-    {:reply, connected_count, {new_tty_list, pids}}
+    {:reply, connected_count, {new_tty_list, pids, sup}}
   end
 
   @doc """
   Closes any connected tty running the Firmata identifier
   """
-  def handle_info(:tock, {ttys, ident_pids}) do
+  def handle_info(:tock, {ttys, ident_pids, sup}) do
     ttys = remove_connected(ttys)
     Enum.each(ident_pids, &Ident.stop(elem(&1, 1)))
-    {:noreply, {ttys, []}}
+    {:noreply, {ttys, [], sup}}
   end
 
   @doc """
@@ -77,37 +81,44 @@ defmodule Cortex.Thing.Manager do
   wire RS232 DTR to a board reset, and Firmata tells us its firmware
   name on startup. That's why this works.
   """
-  def handle_info({:probe, tty_path}, {tty_list, ident_pids}) do
+  def handle_info({:probe, tty_path}, {tty_list, ident_pids, sup}) do
     {:ok, pid} = Ident.start_link(tty_path, 57600, self())
-    {:noreply, {tty_list, [{tty_path, pid}|ident_pids]}}
+    {:noreply, {tty_list, [{tty_path, pid}|ident_pids], sup}}
   end
 
   @doc """
   Stop probing the tty by disconnecting the serial port
+
+  If we have code for this thing, start it up in the supervisor
   """
-  def handle_info({:unprobe, tty_path}, {tty_list, ident_pids}) do
+  def handle_info({:unprobe, tty_path, name}, {tty_list, ident_pids, sup}) do
     ident_pids = disconnect(ident_pids, tty_path, fn(pid) ->
-      IO.puts "stopped #{tty_path}"
       Ident.stop(pid)
+      module = Cortex.Thing.build_module(name)
+      if module do
+        Cortex.Thing.Supervisor.start_device(sup, tty_path, module)
+      end
     end)
-    {:noreply, {tty_list, ident_pids}}
+    {:noreply, {tty_list, ident_pids, sup}}
   end
 
   @doc """
   Received when we have identified a tty to be running Firmata
-  At this point it's ready to pass to some process to open and use it
   """
-  def handle_info({:identified, tty_path, name}, {tty_list, ident_pids}) do
-    IO.puts ">>>>> identified #{tty_path} #{name}"
-    {:noreply, {identified(tty_list, tty_path, name), ident_pids}}
+  def handle_info({:identified, tty_path, name}, {tty_list, ident_pids, sup}) do
+    {:noreply, {identified(tty_list, tty_path, name), ident_pids, sup}}
   end
 
   @doc """
   Received when we have lost a known Firmata device
   Stopping any process you started when it was identified
   """
-  def handle_info({:lost, tty_path, name}, state) do
+  def handle_info({:lost, tty_path, name}, {_,_,sup}=state) do
     IO.puts ">>>>> lost #{tty_path} #{name}"
+    module_name = Cortex.Thing.module_name(name)
+    if module_name do
+      Cortex.Thing.Supervisor.stop_device(sup, module_name)
+    end
     {:noreply, state}
   end
 
@@ -151,7 +162,7 @@ defmodule Cortex.Thing.Manager do
   def identified(ttys, tty_path, firmware_name) do
     Enum.reduce(ttys, [], fn({path, name, status} = tty, result) ->
       if status == @connected and path == tty_path do
-        send(self, {:unprobe, path})
+        send(self, {:unprobe, path, firmware_name})
         [{path, firmware_name, @known}|result]
       else
         [tty|result]
