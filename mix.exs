@@ -4,6 +4,9 @@ defmodule Cortex.Mixfile do
   def project do
     [app: :cortex,
      version: "0.0.1",
+     name: "Cortex",
+     source_url: "https://github.com/fatehitech/cortex",
+     homepage_url: "https://github.com/fatehitech/cortex",
      elixir: "~> 1.0",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
@@ -39,7 +42,10 @@ defmodule Cortex.Mixfile do
       {:gettext, "~> 0.9"},
       {:cowboy, "~> 1.0"},
       {:firmata, path: "/Users/keyvan/Workspace/firmata"},
-      {:serial, path: "/Users/keyvan/Workspace/elixir_serial"}
+      {:serial, path: "/Users/keyvan/Workspace/elixir_serial"},
+      {:credo, "~> 0.2", only: [:dev, :test]},
+      {:earmark, "~> 0.1", only: :dev},
+      {:ex_doc, "~> 0.11", only: :dev}
    ]
   end
 
