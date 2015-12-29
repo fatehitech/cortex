@@ -30,9 +30,7 @@ defmodule Cortex.Thing.Manager do
     ttys = []
     scan_pids = []
     {:ok, sup} = Cortex.Thing.Supervisor.start_link
-    state = {ttys, scan_pids, sup}
-    manager = self
-    {:ok, state}
+    {:ok, {ttys, scan_pids, sup}}
   end
 
   def loop(manager) do

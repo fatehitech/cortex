@@ -14,11 +14,11 @@ defmodule Cortex.Worker.ScanApp do
     {:ok, {board, serial, tty, owner}}
   end
 
-  def handle_info({:firmata, {:version, major, minor}}, state) do
+  def handle_info({:firmata, {:version, _major, _minor}}, state) do
     {:noreply, state}
   end
 
-  def handle_info({:firmata, {:firmware_name, name}}, {board, serial, tty, owner} = state) do
+  def handle_info({:firmata, {:firmware_name, name}}, {_board, _serial, tty, owner} = state) do
     send(owner, {:identified, tty, name})
     {:noreply, state}
   end
