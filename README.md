@@ -1,22 +1,10 @@
 # Cortex
 
-Intended to run on a device connected to microcontrollers via serial port.
+Maintains **Things** which contain Firmata code.
 
-Firmata code for each microcontroller is maintained in the cortex.
+One or more [Thalamex](https://github.com/fatehitech/thalamex) nodes connect to Cortex to fetch this code.
 
-This allows for code changes as requested by external systems.
-
-Cortex ensures that each microcontroller is identified and code loaded.
-
-**Identification** of each MCU occurs based on the firmware name reported by Firmata
-
-Each connected MCU have a unique firmware name. Set it by changing the sketch filename.
-
-## Features
-
-* Web interface for device configuration
-* Enumerate, persist, and autoload code for each devices
-* Remotely alter code for each device
+## Usage
 
 To start your Phoenix app:
 
