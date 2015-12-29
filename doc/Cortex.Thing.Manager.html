@@ -71,16 +71,23 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Loop: identifies each <strong>unknown</strong> and <strong>unconnected</strong> tty by connecting to it and listening
-after 10 seconds</p>
-<pre><code class="elixir">close the tty</code></pre>
-<p>on receive firmware_name</p>
-<pre><code class="elixir">report known tty and firmware_name</code></pre>
-<p>For each tty identification
-lookup matching firmware_name in database</p>
-<pre><code class="elixir">start it up, supervised</code></pre>
-<p>Also detects devices that we consider <strong>known</strong> which have been lost
-  and stops them from the supervisor</p>
+          <p>A loop identifies each <strong>unknown</strong> and <strong>unconnected</strong> operating system
+tty that looks like a serial port by probing it (connecting to it)
+in order to launch stored Firmata code under a supervisor.</p>
+<ul>
+<li>If no probes are active, waits 5 seconds before looping again
+</li>
+<li>If probes are active, waits 10 seconds, then closes any open probe
+</li>
+<li>On receive <code class="inline">firmware_name</code>, closes the probe and saves the name
+</li>
+<li>For each tty identification, lookup matching <code class="inline">firmware_name</code> in database
+</li>
+<li>If code is found in the database for this <code class="inline">firmware_name</code>, start it supervised
+</li>
+<li>Detects <strong>known</strong> devices which have been lost/unplugged and stops them via supervisor
+</li>
+</ul>
 
         </section>
       
@@ -223,7 +230,7 @@ while converting to desired tuple structure</p>
     </a>
     <span class="signature">disconnect(ident_pids, tty_path, found_callback)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L139" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L136" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -243,7 +250,7 @@ and then returns the list</p>
     </a>
     <span class="signature">handle_call(msg, from, state)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L50" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L47" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -261,7 +268,7 @@ and then returns the list</p>
     </a>
     <span class="signature">handle_info(arg1, state)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L68" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L65" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -280,7 +287,7 @@ Stopping any process you started when it was identified</p>
     </a>
     <span class="signature">identified(ttys, tty_path, firmware_name)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L156" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L153" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -300,7 +307,7 @@ triggering a disconnect event for it and returning the list</p>
     </a>
     <span class="signature">identify(ttys)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L175" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L172" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -321,7 +328,7 @@ returns the list</p>
     </a>
     <span class="signature">loop(manager)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L36" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L33" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -338,7 +345,7 @@ returns the list</p>
     </a>
     <span class="signature">lost_knowns(prev_ttys, new_ttys)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L207" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L204" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -356,7 +363,7 @@ returns the list</p>
     </a>
     <span class="signature">remove_connected(ttys)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L123" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L120" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -375,7 +382,7 @@ that were in the connected state having been removed</p>
     </a>
     <span class="signature">start_link()</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L25" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L22" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -392,7 +399,7 @@ that were in the connected state having been removed</p>
     </a>
     <span class="signature">update_tty_list(sys_ttys, seen_ttys)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L192" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/lib/cortex/thing/manager.ex#L189" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

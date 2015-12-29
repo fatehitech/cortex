@@ -134,11 +134,23 @@
 <div class="summary-row">
   <div class="summary-signature"><a href="Cortex.Thing.Manager.html">Cortex.Thing.Manager</a></div>
   
-    <div class="summary-synopsis"><p>Loop: identifies each <strong>unknown</strong> and <strong>unconnected</strong> tty by connecting to it and listening
-after 10 seconds</p>
-<pre><code class="elixir">close the tty</code></pre>
-<p>on receive firmware_name</p>
-<pre><code class="elixir">report known tty and firmware_name</code></pre>
+    <div class="summary-synopsis"><p>A loop identifies each <strong>unknown</strong> and <strong>unconnected</strong> operating system
+tty that looks like a serial port by probing it (connecting to it)
+in order to launch stored Firmata code under a supervisor.</p>
+<ul>
+<li>If no probes are active, waits 5 seconds before looping again
+</li>
+<li>If probes are active, waits 10 seconds, then closes any open probe
+</li>
+<li>On receive <code class="inline">firmware_name</code>, closes the probe and saves the name
+</li>
+<li>For each tty identification, lookup matching <code class="inline">firmware_name</code> in database
+</li>
+<li>If code is found in the database for this <code class="inline">firmware_name</code>, start it supervised
+</li>
+<li>Detects <strong>known</strong> devices which have been lost/unplugged and stops them via supervisor
+</li>
+</ul>
 </div>
   
 </div>

@@ -1,17 +1,14 @@
 defmodule Cortex.Thing.Manager do
   @moduledoc """
-  Loop: identifies each **unknown** and **unconnected** tty by connecting to it and listening
-		after 10 seconds
-			close the tty
-		on receive firmware_name
-			report known tty and firmware_name
-
-	For each tty identification
-		lookup matching firmware_name in database
-			start it up, supervised
-
-  Also detects devices that we consider **known** which have been lost
-    and stops them from the supervisor
+  A loop identifies each **unknown** and **unconnected** operating system
+  tty that looks like a serial port by probing it (connecting to it)
+  in order to launch stored Firmata code under a supervisor.
+  * If no probes are active, waits 5 seconds before looping again
+  * If probes are active, waits 10 seconds, then closes any open probe
+  * On receive `firmware_name`, closes the probe and saves the name
+  * For each tty identification, lookup matching `firmware_name` in database
+  * If code is found in the database for this `firmware_name`, start it supervised
+  * Detects **known** devices which have been lost/unplugged and stops them via supervisor
   """
 
   @disconnected 0
@@ -23,7 +20,7 @@ defmodule Cortex.Thing.Manager do
   alias Cortex.Worker.ScanApp, as: Ident
 
   def start_link do
-    GenServer.start_link(__MODULE__, :ok, name: :thing_manager)
+    GenServer.start_link(__MODULE__, :ok, name: Cortex.Thing.Manager)
   end
 
   def init(:ok) do
