@@ -22,7 +22,7 @@ defmodule Cortex.Mixfile do
   def application do
     [mod: {Cortex, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :sqlite_ecto, :firmata, :serial]]
+                    :phoenix_ecto, :sqlite_ecto]]
   end
 
   # Specifies which paths to compile per environment.
@@ -41,8 +41,6 @@ defmodule Cortex.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.9"},
       {:cowboy, "~> 1.0"},
-      {:firmata, path: "/Users/keyvan/Workspace/firmata"},
-      {:serial, path: "/Users/keyvan/Workspace/elixir_serial"},
       {:credo, "~> 0.2", only: [:dev, :test]},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev}

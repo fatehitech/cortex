@@ -12,7 +12,7 @@ defmodule Cortex do
       # Start the Ecto repository
       supervisor(Cortex.Repo, []),
       # Here you could define other workers and supervisors as children
-      worker(Cortex.Worker, [])
+      # worker(Cortex.Worker, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
