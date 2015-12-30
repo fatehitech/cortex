@@ -1,4 +1,5 @@
 defmodule Cortex.Thing.Code do
+
   def module_name(name) do
     basename =
       name
@@ -14,13 +15,9 @@ defmodule Cortex.Thing.Code do
     |> elem(0)
   end
 
-  def gen_boilerplate(name, "firmata") do
+  def gen_boilerplate(name, preset) do
+    mod = :"Elixir.Cortex.Thing.Code.Boilerplate.#{String.capitalize(preset)}"
     module_name(name)
-    |> Cortex.Thing.Code.Boilerplate.Firmata.body()
-  end
-
-  def gen_boilerplate(name, "nerves") do
-    module_name(name)
-    |> Cortex.Thing.Code.Boilerplate.Nerves.body()
+    |> mod.body()
   end
 end

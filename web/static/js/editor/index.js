@@ -2,7 +2,7 @@ import "./elixir"
 import "./lint"
 
 let Editor = {
-  init(socket, el) {
+  init(editorChannel, name, el) {
     el = $(el).get(0);
     if (!el){ return }
 
@@ -13,13 +13,10 @@ let Editor = {
       indentUnit: 2,
       mode: "elixir",
       theme: "tomorrow-night-bright",
+      smartIndent: false
     }
 
     let toolbar = $('<div>').addClass('toolbar')
-
-    socket.connect()
-    let editorChannel = socket.channel("editor:lobby")
-    editorChannel.join()
 
     if (el.tagName === "TEXTAREA") {
       let editor = CodeMirror.fromTextArea(el, _.assign({}, defaults, {
@@ -32,7 +29,7 @@ let Editor = {
           e.preventDefault()
           editorChannel.push("boilerplate", {
             preset: preset,
-            name: $("#thing_firmware_name").val()
+            name: name 
           })
           .receive("ok", ({code}) => editor.setValue(code))
         })
@@ -59,6 +56,7 @@ let Editor = {
 
 
       toolbar.append([
+        boilerplateButton('Series Starter', 'series'),
         boilerplateButton('Firmata Starter', 'firmata'),
         //boilerplateButton('Nerves Starter', 'nerves'),
         distractionFree(),

@@ -38,3 +38,10 @@ config :cortex, Cortex.Repo,
   adapter: Sqlite.Ecto,
   database: "db/cortex_dev.sqlite",
   pool_size: 10
+
+config :cortex, Cortex.InstreamConnection,
+  hosts:  [ "localhost" ],
+  pool:   [ max_overflow: 0, size: 1 ],
+  port:   8086,
+  scheme: "http",
+  writer: Instream.Writer.Line

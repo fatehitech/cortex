@@ -12,6 +12,12 @@
   </div>
 
   <div class="form-group">
+    <%= label f, :series_code, class: "control-label" %>
+    <%= textarea f, :series_code, class: "form-control editor" %>
+    <%= error_tag f, :series_code %>
+  </div>
+
+  <div class="form-group">
     <%= label f, :code, class: "control-label" %>
     <%= textarea f, :code, class: "form-control editor" %>
     <%= error_tag f, :code %>

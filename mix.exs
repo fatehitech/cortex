@@ -22,7 +22,7 @@ defmodule Cortex.Mixfile do
   def application do
     [mod: {Cortex, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :sqlite_ecto]]
+                    :phoenix_ecto, :sqlite_ecto, :instream]]
   end
 
   # Specifies which paths to compile per environment.
@@ -43,7 +43,8 @@ defmodule Cortex.Mixfile do
       {:cowboy, "~> 1.0"},
       {:credo, "~> 0.2", only: [:dev, :test]},
       {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev}
+      {:ex_doc, "~> 0.11", only: :dev},
+      {:instream, "~> 0.9"}
    ]
   end
 

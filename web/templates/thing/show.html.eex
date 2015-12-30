@@ -8,6 +8,11 @@
   </li>
 
   <li>
+    <strong>Series code:</strong>
+    <pre readonly="true" data-name="<%= @thing.firmware_name %>" class="editor"><%= @thing.series_code %></pre>
+  </li>
+
+  <li>
     <strong>Code:</strong>
     <pre readonly="true" data-name="<%= @thing.firmware_name %>" class="editor"><%= @thing.code %></pre>
   </li>
