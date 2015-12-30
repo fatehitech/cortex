@@ -1,6 +1,5 @@
 import "./elixir"
 import "./lint"
-import ElixirLinter from "./elixir-lint"
 
 let Editor = {
   init(socket, el) {
@@ -24,7 +23,19 @@ let Editor = {
       socket.connect()
       let editorChannel = socket.channel("editor:linter")
       editorChannel.join()
-      ElixirLinter.init(editorChannel)
+      CodeMirror.registerHelper("lint", "elixir", function(text, callback) {
+        editorChannel.push("check_code", {code: text})
+        .receive("error", ({line, description}) => {
+          callback([{
+            from: CodeMirror.Pos(line-1),
+            to: CodeMirror.Pos(line-1),
+            message: description
+          }]);
+        })
+        .receive("ok", ()=>{
+          callback([])
+        })
+      });
     } else {
       let code = $(el).text() 
       let container = $(el).parent().get(0);
