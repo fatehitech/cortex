@@ -23,6 +23,11 @@ defmodule Cortex.Thing do
   end
 
   def get_code_for(name) do
-    Cortex.Repo.one(from thing in Cortex.Thing, select: thing.code, where: thing.firmware_name == ^name)
+    code = Cortex.Repo.one(from thing in Cortex.Thing, select: thing.code, where: thing.firmware_name == ^name)
+    if code do
+      {:ok, code}
+    else
+      {:error}
+    end
   end
 end

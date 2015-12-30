@@ -1,7 +1,8 @@
 defmodule Cortex.EditorChannel do
   use Cortex.Web, :channel
+  import Cortex.Thing.Code, only: [gen_boilerplate: 2]
 
-  def join("editor:linter", _params, socket) do
+  def join("editor:lobby", _params, socket) do
     {:ok, socket}
   end
 
@@ -14,6 +15,7 @@ defmodule Cortex.EditorChannel do
     end
   end
 
-  def compile(code) do
+  def handle_in("boilerplate", %{"preset" => preset, "name" => name}, socket) do
+    {:reply, {:ok, %{:code=>gen_boilerplate(name, preset)}}, socket}
   end
 end
