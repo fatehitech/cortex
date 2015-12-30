@@ -30,4 +30,13 @@ defmodule Cortex.Thing do
       {:error}
     end
   end
+
+  @doc """
+  Thalamex can publish messages to Cortex, which will come through in this method.
+  If there is going to be some kind of pub sub routing I suppose this is the data entrypoint
+  """
+  def handle_in(name, data) do
+    IO.inspect data
+    :ok
+  end
 end
