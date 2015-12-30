@@ -16,7 +16,11 @@ let Editor = {
     }
 
     if (el.tagName === "TEXTAREA") {
-      let editor;
+      let editor = CodeMirror.fromTextArea(el, _.assign({}, defaults, {
+        gutters: ["CodeMirror-lint-markers"],
+        lint: { async: true }
+      }))
+      window.editor = editor;
 
       socket.connect()
       let editorChannel = socket.channel("editor:lobby")
@@ -33,19 +37,34 @@ let Editor = {
         })
       }
 
-      let toolbar = $('<div>')
+      let distractionFree = (editor) => {
+        let title = "Distraction Free Mode";
+        let button = $('<button>').addClass('toolbar-button')
+        return button.text(title).click(function(e) {
+          e.preventDefault()
+          let wrapper = $(editor.display.wrapper)
+          if (wrapper.hasClass('distraction-free')) {
+            wrapper.removeClass('distraction-free');
+            toolbar.removeClass('distraction-free');
+            button.text(title)
+          } else {
+            wrapper.addClass('distraction-free');
+            toolbar.addClass('distraction-free')
+            button.text(`Leave ${title}`)
+          }
+          editor.refresh()
+        })
+      }
+
+      let toolbar = $('<div>').addClass('toolbar')
+
       toolbar.append([
-        boilerplateButton('Firmata', 'firmata'),
-        boilerplateButton('Nerves', 'nerves')
+        boilerplateButton('Firmata Starter', 'firmata'),
+        //boilerplateButton('Nerves Starter', 'nerves'),
+        distractionFree(editor)
       ])
 
-      $(el).before(toolbar)
-
-      editor = CodeMirror.fromTextArea(el, _.assign({}, defaults, {
-        gutters: ["CodeMirror-lint-markers"],
-        lint: { async: true }
-      }))
-      window.editor = editor;
+      $(editor.display.wrapper).before(toolbar)
 
       CodeMirror.registerHelper("lint", "elixir", function(text, callback) {
         editorChannel.push("check_code", {code: text})
