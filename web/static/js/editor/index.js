@@ -3,26 +3,24 @@ import "./lint"
 import ElixirLinter from "./elixir-lint"
 
 let Editor = {
-  init(socket, el){
-    if (!el){ return }
+  init(socket, el) {
     el = $(el).get(0);
+    if (!el){ return }
 
-    function getOpts(el) {
-      return {
-        lineNumbers: true,
-        indentWithTabs: false,
-        tabSize: 2,
-        indentUnit: 2,
-        mode: "elixir",
-        theme: "tomorrow-night-bright",
-        readOnly: $(el).attr('readonly') ? "nocursor" : false,
-        gutters: ["CodeMirror-lint-markers"],
-        lint: { async: true }
-      }
+    let defaults = {
+      lineNumbers: true,
+      indentWithTabs: false,
+      tabSize: 2,
+      indentUnit: 2,
+      mode: "elixir",
+      theme: "tomorrow-night-bright",
     }
 
     if (el.tagName === "TEXTAREA") {
-      let editor = CodeMirror.fromTextArea(el, getOpts(el))
+      let editor = CodeMirror.fromTextArea(el, _.assign({}, defaults, {
+        gutters: ["CodeMirror-lint-markers"],
+        lint: { async: true }
+      }))
       socket.connect()
       let editorChannel = socket.channel("editor:linter")
       editorChannel.join()
@@ -31,11 +29,12 @@ let Editor = {
       let code = $(el).text() 
       let container = $(el).parent().get(0);
       $(el).remove();
-      let opts = getOpts(el);
-      opts.value = code;
-      CodeMirror(container, opts);
+      CodeMirror(container, _.assign({}, defaults, {
+        readOnly: "nocursor",
+        value: code
+      }));
     }
-  },
+  }
 }
 
 export default Editor;
