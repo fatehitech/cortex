@@ -15,16 +15,17 @@ let Editor = {
       theme: "tomorrow-night-bright",
     }
 
+    let toolbar = $('<div>').addClass('toolbar')
+
+    socket.connect()
+    let editorChannel = socket.channel("editor:lobby")
+    editorChannel.join()
+
     if (el.tagName === "TEXTAREA") {
       let editor = CodeMirror.fromTextArea(el, _.assign({}, defaults, {
         gutters: ["CodeMirror-lint-markers"],
         lint: { async: true }
       }))
-      window.editor = editor;
-
-      socket.connect()
-      let editorChannel = socket.channel("editor:lobby")
-      editorChannel.join()
 
       let boilerplateButton = (label, preset) => {
         return $('<button>').text(label).click(function(e) {
@@ -37,9 +38,9 @@ let Editor = {
         })
       }
 
-      let distractionFree = (editor) => {
+      let distractionFree = () => {
         let title = "Distraction Free Mode";
-        let button = $('<button>').addClass('toolbar-button')
+        let button = $('<button>')
         return button.text(title).click(function(e) {
           e.preventDefault()
           let wrapper = $(editor.display.wrapper)
@@ -56,14 +57,12 @@ let Editor = {
         })
       }
 
-      let toolbar = $('<div>').addClass('toolbar')
 
       toolbar.append([
         boilerplateButton('Firmata Starter', 'firmata'),
         //boilerplateButton('Nerves Starter', 'nerves'),
-        distractionFree(editor)
+        distractionFree(),
       ])
-
       $(editor.display.wrapper).before(toolbar)
 
       CodeMirror.registerHelper("lint", "elixir", function(text, callback) {
@@ -82,11 +81,28 @@ let Editor = {
     } else {
       let code = $(el).text() 
       let container = $(el).parent().get(0);
+      let name = $(el).data('name');
+      console.log(name);
       $(el).remove();
-      CodeMirror(container, _.assign({}, defaults, {
+      let editor = CodeMirror(container, _.assign({}, defaults, {
         readOnly: "nocursor",
         value: code
       }));
+
+      let resetDevice = () => {
+        let title = "Reset Device";
+        let button = $('<button>')
+        return button.text(title).click(function(e) {
+          e.preventDefault()
+          editorChannel.push("reset_device", {name: name})
+        })
+      }
+
+      toolbar.append([
+        resetDevice()
+      ])
+
+      $(editor.display.wrapper).before(toolbar)
     }
   }
 }

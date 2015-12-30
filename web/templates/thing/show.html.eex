@@ -9,7 +9,7 @@
 
   <li>
     <strong>Code:</strong>
-    <pre readonly="true" class="editor"><%= @thing.code %></pre>
+    <pre readonly="true" data-name="<%= @thing.firmware_name %>" class="editor"><%= @thing.code %></pre>
   </li>
 
 </ul>
