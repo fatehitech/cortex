@@ -3,6 +3,7 @@ defmodule Cortex.UserSocket do
 
   ## Channels
   # channel "rooms:*", Cortex.RoomChannel
+  channel "editor:*", Cortex.EditorChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
