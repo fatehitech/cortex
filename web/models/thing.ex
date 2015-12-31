@@ -9,8 +9,8 @@ defmodule Cortex.Thing do
     timestamps
   end
 
-  @required_fields ~w(firmware_name series_code code)
-  @optional_fields ~w()
+  @required_fields ~w(firmware_name code)
+  @optional_fields ~w(series_code)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -64,17 +64,7 @@ defmodule Cortex.Thing do
   If there is going to be some kind of pub sub routing I suppose this is the data entrypoint
   """
   def handle_in(name, data) do
-
     IO.inspect data
     :ok
   end
-
-  def mkdb() do
-  end
-
-  # def write_point() do
-  #   data = %Cortex.Series{}
-  #   data = %{ data | fields: %{ data.fields | value: 17 }}
-  #   |> Cortex.InstreamConnection.write(async: true)
-  # end
 end
