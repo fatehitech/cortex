@@ -115,7 +115,7 @@ let Editor = {
             console.log(err);
           })
           .receive("ok", (res)=>{
-            console.log(res);
+            alert(res.response);
           })
         })
       }

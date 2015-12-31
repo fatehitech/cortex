@@ -1,8 +1,10 @@
 # Cortex
 
-Maintains **Things** which contain Firmata code.
+Maintains **Things** which contain behavior code, time-series code, actions, and that sort of thing.
 
-One or more [Thalamex](https://github.com/fatehitech/thalamex) nodes connect to Cortex to fetch this code.
+One or more [Thalamex](https://github.com/fatehitech/thalamex) nodes connect to Cortex.
+
+The idea here is to keep the software of the end nodes very generic (e.g. Firmata, Thalamex) and make the real logic come from the web editor in Cortex.
 
 ## Usage
 
