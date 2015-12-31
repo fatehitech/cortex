@@ -20,9 +20,17 @@ defmodule Cortex.EditorChannel do
   end
 
   def handle_in("reset_device", params, socket) do
-    Node.list() |> Enum.each(fn(n) ->
+    Node.list() |> Enum.map(fn(n) ->
       n
       |> :rpc.call(Thalamex.Thing.Manager, :reset_thing, [params["name"]])
+    end)
+    {:noreply, socket}
+  end
+
+  def handle_in("send_thing", params, socket) do
+    Node.list() |> Enum.map(fn(n) ->
+      n
+      |> :rpc.call(Thalamex.Thing.Manager, :send_thing, [params["name"], params["message"]])
     end)
     {:noreply, socket}
   end

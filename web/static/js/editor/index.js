@@ -96,8 +96,18 @@ let Editor = {
         })
       }
 
+      let sendBlink = () => {
+        let title = "Send Blink";
+        let button = $('<button>')
+        return button.text(title).click(function(e) {
+          e.preventDefault()
+          editorChannel.push("send_thing", {name: name, message: "blink"})
+        })
+      }
+
       toolbar.append([
-        resetDevice()
+        resetDevice(),
+        sendBlink()
       ])
 
       $(editor.display.wrapper).before(toolbar)
