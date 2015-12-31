@@ -22,6 +22,7 @@ import "deps/phoenix_html/web/static/js/phoenix_html"
 
 import socket from "./socket"
 import Editor from "./editor"
+import TimeSeries from "./time-series"
 
 let editors = $('.editor');
 if (editors.length) {
@@ -34,3 +35,18 @@ if (editors.length) {
     Editor.init(editorChannel, name, el)
   });
 }
+
+// cool this works -- can be used to make graphs
+TimeSeries.init({
+  server: [
+    {
+      protocol: "http",
+      host:     "localhost",
+      port:     8086
+    }
+  ],
+  username: "",
+  password: "",
+
+  database: "uno"
+});
