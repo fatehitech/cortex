@@ -29,7 +29,7 @@ if (editors.length) {
   socket.connect()
   let editorChannel = socket.channel("editor:lobby")
   editorChannel.join()
-  let name = $("#thing_firmware_name").val()
+  let name = $("#thing_firmware_name").val() || "Something"
   editors.each(function(_i, el) {
     console.log(el);
     Editor.init(editorChannel, name, el)
