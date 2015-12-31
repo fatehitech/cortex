@@ -66,9 +66,7 @@ defmodule Cortex.Thing do
     Node.list() |> Enum.map(fn(n) ->
       res = :rpc.call(n, Thalamex.Thing.Manager, manager_func, args)
       case res do
-        {:badrpc, _} ->
-          IO.inspect res
-          nil
+        {:badrpc, _} -> nil
         _ -> res
       end
     end)

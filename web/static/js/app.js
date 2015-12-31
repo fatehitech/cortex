@@ -37,16 +37,16 @@ if (editors.length) {
 }
 
 // cool this works -- can be used to make graphs
-TimeSeries.init({
-  server: [
-    {
-      protocol: "http",
-      host:     "localhost",
-      port:     8086
-    }
-  ],
-  username: "",
-  password: "",
-
-  database: "uno"
-});
+//TimeSeries.init({
+//  server: [
+//    {
+//      protocol: "http",
+//      host:     "localhost",
+//      port:     8086
+//    }
+//  ],
+//  username: "",
+//  password: "",
+//
+//  database: "uno"
+//});
