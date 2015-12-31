@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Cortex.Thing – Cortex v0.0.1</title>
+    <title>Cortex.EditorChannel – Cortex v0.0.1</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -60,10 +60,10 @@
 
       <h1>
         <small class="visible-xs">Cortex v0.0.1</small>
-        Cortex.Thing
+        Cortex.EditorChannel
         
         
-          <a href="https://github.com/fatehitech/cortex/blob/master/web/models/thing.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/fatehitech/cortex/blob/master/web/channels/editor_channel.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -88,45 +88,47 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call_thing/2">call_thing(name, message)</a>
+    <a href="#code_change/3">code_change(old, socket, extra)</a>
   </div>
   
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#changeset/2">changeset(model, params \\ :empty)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Creates a changeset based on the <code class="inline">model</code> and <code class="inline">params</code></p>
+    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.code_change/3</code></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_code_for/1">get_code_for(name)</a>
+    <a href="#handle_in/3">handle_in(arg1, params, socket)</a>
   </div>
   
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#handle_in/2">handle_in(name, data)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Axon can publish messages to Cortex, which will come through in this method.
-If there is going to be some kind of pub sub routing I suppose this is the data entrypoint</p>
+    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.handle_in/3</code></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#reset/1">reset(name)</a>
+    <a href="#handle_info/2">handle_info(message, socket)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.handle_info/2</code></p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#send_message/2">send_message(name, message)</a>
+    <a href="#join/3">join(binary, params, socket)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.join/3</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#terminate/2">terminate(reason, socket)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.terminate/2</code></p>
+</div>
   
 </div>
 
@@ -150,111 +152,94 @@ If there is going to be some kind of pub sub routing I suppose this is the data 
             </a>
             Functions
           </h1>
-          <div class="detail" id="call_thing/2">
+          <div class="detail" id="code_change/3">
   <div class="detail-header">
-    <a href="#call_thing/2" class="detail-link" title="Link to this function">
+    <a href="#code_change/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call_thing(name, message)</span>
+    <span class="signature">code_change(old, socket, extra)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/web/models/thing.ex#L53" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/web/channels/editor_channel.ex#L2" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="changeset/2">
-  <div class="detail-header">
-    <a href="#changeset/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">changeset(model, params \\ :empty)</span>
-      
-      <a href="https://github.com/fatehitech/cortex/blob/master/web/models/thing.ex#L21" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    <p>Creates a changeset based on the <code class="inline">model</code> and <code class="inline">params</code>.</p>
-<p>If no params are provided, an invalid changeset is returned
-with no validation performed.</p>
+    <p>Callback implementation for <code class="inline">c:Phoenix.Channel.code_change/3</code>.</p>
 
   </section>
 </div>
-<div class="detail" id="get_code_for/1">
+<div class="detail" id="handle_in/3">
   <div class="detail-header">
-    <a href="#get_code_for/1" class="detail-link" title="Link to this function">
+    <a href="#handle_in/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_code_for(name)</span>
+    <span class="signature">handle_in(arg1, params, socket)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/web/models/thing.ex#L26" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/web/channels/editor_channel.ex#L9" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="handle_in/2">
-  <div class="detail-header">
-    <a href="#handle_in/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">handle_in(name, data)</span>
-      
-      <a href="https://github.com/fatehitech/cortex/blob/master/web/models/thing.ex#L77" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    <p>Axon can publish messages to Cortex, which will come through in this method.
-If there is going to be some kind of pub sub routing I suppose this is the data entrypoint</p>
+    <p>Callback implementation for <code class="inline">c:Phoenix.Channel.handle_in/3</code>.</p>
 
   </section>
 </div>
-<div class="detail" id="reset/1">
+<div class="detail" id="handle_info/2">
   <div class="detail-header">
-    <a href="#reset/1" class="detail-link" title="Link to this function">
+    <a href="#handle_info/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">reset(name)</span>
+    <span class="signature">handle_info(message, socket)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/web/models/thing.ex#L61" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/web/channels/editor_channel.ex#L2" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
+    <p>Callback implementation for <code class="inline">c:Phoenix.Channel.handle_info/2</code>.</p>
+
   </section>
 </div>
-<div class="detail" id="send_message/2">
+<div class="detail" id="join/3">
   <div class="detail-header">
-    <a href="#send_message/2" class="detail-link" title="Link to this function">
+    <a href="#join/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">send_message(name, message)</span>
+    <span class="signature">join(binary, params, socket)</span>
       
-      <a href="https://github.com/fatehitech/cortex/blob/master/web/models/thing.ex#L57" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/fatehitech/cortex/blob/master/web/channels/editor_channel.ex#L5" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
+    <p>Callback implementation for <code class="inline">c:Phoenix.Channel.join/3</code>.</p>
+
+  </section>
+</div>
+<div class="detail" id="terminate/2">
+  <div class="detail-header">
+    <a href="#terminate/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">terminate(reason, socket)</span>
+      
+      <a href="https://github.com/fatehitech/cortex/blob/master/web/channels/editor_channel.ex#L2" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
     
+  </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <code class="inline">c:Phoenix.Channel.terminate/2</code>.</p>
+
   </section>
 </div>
 
