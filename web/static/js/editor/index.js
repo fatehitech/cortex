@@ -58,7 +58,7 @@ let Editor = {
       toolbar.append([
         boilerplateButton('Series Starter', 'series'),
         boilerplateButton('Firmata Starter', 'firmata'),
-        //boilerplateButton('Nerves Starter', 'nerves'),
+        boilerplateButton('Standalone Starter', 'standalone'),
         distractionFree(),
       ])
       $(editor.display.wrapper).before(toolbar)
