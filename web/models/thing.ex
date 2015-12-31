@@ -50,6 +50,10 @@ defmodule Cortex.Thing do
     end
   end
 
+  def call_thing(name, message) do
+    rpc(:call_thing, [name, message])
+  end
+
   def send_message(name, message) do
     rpc(:send_thing, [name, message])
   end

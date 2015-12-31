@@ -105,9 +105,25 @@ let Editor = {
         })
       }
 
+      let getLedState = () => {
+        let title = "Get LED State";
+        let button = $('<button>')
+        return button.text(title).click(function(e) {
+          e.preventDefault()
+          editorChannel.push("call_thing", {name: name, message: "led_state"})
+          .receive("error", (err) => {
+            console.log(err);
+          })
+          .receive("ok", (res)=>{
+            console.log(res);
+          })
+        })
+      }
+
       toolbar.append([
         resetDevice(),
-        sendBlink()
+        sendBlink(),
+        getLedState()
       ])
 
       $(editor.display.wrapper).before(toolbar)
