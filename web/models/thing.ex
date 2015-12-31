@@ -60,8 +60,16 @@ defmodule Cortex.Thing do
 
   defp rpc(manager_func, args) do
     Node.list() |> Enum.map(fn(n) ->
-      n |> :rpc.call(Thalamex.Thing.Manager, manager_func, args)
+      res = :rpc.call(n, Thalamex.Thing.Manager, manager_func, args)
+      case res do
+        {:badrpc, _} ->
+          IO.inspect res
+          nil
+        _ -> res
+      end
     end)
+    |> Enum.reject(fn(res) -> res == nil end)
+    |> List.last
   end
 
   def handle_in(_name, {:write_series, struct_mod, map}) do
