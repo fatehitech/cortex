@@ -50,6 +50,20 @@ defmodule Cortex.Thing do
     end
   end
 
+  def send_message(name, message) do
+    rpc(:send_thing, [name, message])
+  end
+
+  def reset(name) do
+    rpc(:reset_thing, [name])
+  end
+
+  defp rpc(manager_func, args) do
+    Node.list() |> Enum.map(fn(n) ->
+      n |> :rpc.call(Thalamex.Thing.Manager, manager_func, args)
+    end)
+  end
+
   def handle_in(_name, {:write_series, struct_mod, map}) do
     data = struct_mod |> struct()
     fields_mod = Atom.to_string(struct_mod)<>".Fields" |> String.to_atom()

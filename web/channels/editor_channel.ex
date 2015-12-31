@@ -19,19 +19,13 @@ defmodule Cortex.EditorChannel do
     {:reply, {:ok, %{:code=>gen_boilerplate(name, preset)}}, socket}
   end
 
-  def handle_in("reset_device", params, socket) do
-    Node.list() |> Enum.map(fn(n) ->
-      n
-      |> :rpc.call(Thalamex.Thing.Manager, :reset_thing, [params["name"]])
-    end)
+  def handle_in("send_thing", params, socket) do
+    Cortex.Thing.send_message(params["name"], params["message"])
     {:noreply, socket}
   end
 
-  def handle_in("send_thing", params, socket) do
-    Node.list() |> Enum.map(fn(n) ->
-      n
-      |> :rpc.call(Thalamex.Thing.Manager, :send_thing, [params["name"], params["message"]])
-    end)
+  def handle_in("reset_device", params, socket) do
+    Cortex.Thing.reset(params["name"])
     {:noreply, socket}
   end
 end
