@@ -87,43 +87,33 @@ let Editor = {
         value: code
       }));
 
-      let resetDevice = () => {
-        let title = "Reset Device";
-        let button = $('<button>')
-        return button.text(title).click(function(e) {
+      let buttonReset = () => {
+        return $('<button>').text("Reset").click(function(e) {
           e.preventDefault()
           editorChannel.push("reset_device", {name: name})
         })
       }
 
-      let sendBlink = () => {
-        let title = "Send Blink";
-        let button = $('<button>')
-        return button.text(title).click(function(e) {
+      let buttonSend = (title, message) => {
+        return $('<button>').text(title).click(function(e) {
           e.preventDefault()
-          editorChannel.push("send_thing", {name: name, message: "blink"})
+          editorChannel.push("send_thing", {name: name, message: message})
         })
       }
 
-      let getLedState = () => {
-        let title = "Get LED State";
-        let button = $('<button>')
-        return button.text(title).click(function(e) {
+      let buttonCall = (title, message, cb) => {
+        return $('<button>').text(title).click(function(e) {
           e.preventDefault()
-          editorChannel.push("call_thing", {name: name, message: "led_state"})
-          .receive("error", (err) => {
-            console.log(err);
-          })
-          .receive("ok", (res)=>{
-            alert(res.response);
-          })
+          editorChannel.push("call_thing", {name: name, message: message})
+          .receive("error", err => cb(err))
+          .receive("ok", res => cb(null, res.data))
         })
       }
 
       toolbar.append([
-        resetDevice(),
-        sendBlink(),
-        getLedState()
+        buttonReset(),
+        buttonSend("Send Blink", "blink"),
+        buttonCall("Get LED State", "led_state", (err, data) => err ? alert(err) : alert(data))
       ])
 
       $(editor.display.wrapper).before(toolbar)

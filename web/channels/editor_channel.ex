@@ -26,7 +26,7 @@ defmodule Cortex.EditorChannel do
 
   def handle_in("call_thing", params, socket) do
     res = Cortex.Thing.call_thing(params["name"], params["message"])
-    {:reply, {:ok, %{response: res}}, socket}
+    {:reply, {:ok, %{data: res}}, socket}
   end
 
   def handle_in("reset_device", params, socket) do
